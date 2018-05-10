@@ -1,7 +1,8 @@
 Module.register('MMM-YrNow', {
 	defaults: {
         yrApiUrl: "https://www.yr.no/api/v0/locations/id/%s/forecast",
-        updateInterval: 10000
+        updateInterval: 10000,
+        animate: true,
 	},
 
     getTranslations: function() {
@@ -122,9 +123,15 @@ Module.register('MMM-YrNow', {
 
     createAnimation: function(testElement) {
         var xhr = new XMLHttpRequest();
+        var animate = this.config.animate;
         xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 testElement.appendChild(xhr.responseXML.documentElement);
+                if (!animate) {
+                    testElement.children[0].pauseAnimations();
+                    testElement.children[0].setCurrentTime(5);
+                }
+                
             }
         };
         xhr.open('GET', this.file('images/rain.svg'), true);
